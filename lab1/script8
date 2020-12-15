@@ -1,0 +1,7 @@
+#!/bin/bash
+while read line
+do
+	list=$list$(echo $line | cut -d ":" -f 1)" "$(echo $line | cut -d ":" -f 3)"
+"
+done < /etc/passwd
+echo "$list" | sort -n -k 2

@@ -1,0 +1,17 @@
+#!/bin/bash
+read s
+while [[ "$s" != "4" ]]
+do
+	case $s in
+		1)
+			nano
+			;;
+		2)
+			vi
+			;;
+		3)
+			links
+			;;
+	esac
+	read s
+done

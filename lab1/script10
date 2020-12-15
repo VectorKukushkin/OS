@@ -1,0 +1,6 @@
+#!/bin/bash
+list=$(echo $(man bash) | sed 's/[^a-zA-Z \n]/ /g' | sed 's/ /\n/g')
+list=$(echo "$list" | grep -E '....+' | sort | uniq -ic | sed 's/ .\?.\?.\?.\?\n//g')
+list=$(echo "$list" | sort -k 1 -n -r | head -n 3)
+echo "$list"
+

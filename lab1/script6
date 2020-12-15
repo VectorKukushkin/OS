@@ -1,0 +1,17 @@
+#!/bin/bash
+> full.log
+while read line
+do
+	if [[ $(echo $line | awk -F" " '{print $3}') == "(WW)" ]]
+	then
+		echo $(echo $line | awk -F" " '{gsub("\\(WW\\)", "Warning:", $0); print}') >> full.log
+	fi
+done < /var/log/anaconda/X.log
+while read line
+do
+	if [[ $(echo $line | awk -F" " '{print $3}') == "(II)" ]]
+	then
+		echo $(echo $line | awk -F" " '{gsub("\\(II\\)", "Information:", $0); print}') >> full.log
+	fi
+done < /var/log/anaconda/X.log
+cat full.log

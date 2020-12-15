@@ -1,0 +1,6 @@
+#!/bin/bash
+for file in /var/log/*.log
+do
+	let count=$count+$(echo $(wc -l $file 2>/dev/null) | cut -d" " -f 1) 2>/dev/null
+done
+echo $count

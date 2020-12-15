@@ -1,0 +1,9 @@
+#!/bin/bash
+> info.log
+while read line
+do
+	if [[ $(echo $line | cut -d " " -f 2) == "INFO" ]]
+	then
+		echo $line >> info.log
+	fi
+done < /var/log/anaconda/syslog
