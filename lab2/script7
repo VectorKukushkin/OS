@@ -1,0 +1,26 @@
+#!/bin/bash
+proc="$(ps -Ao pid | sed '1d')"
+while read line
+do
+	list1="$list1""
+""$line"" ""$(cat '/proc/'$line'/io' | awk '/read_bytes/ {print $2}')"
+done < <(echo "$proc") 2>/dev/null
+sleep 1m
+proc="$(ps -Ao pid,command | sed '1d')"
+while read line
+do
+	pid="$(echo $line | awk '{print $1}')"
+	list2="$list2""
+""$line"" ""$(cat '/proc/'$pid'/io' | awk '/read_bytes/ {print $2}')"
+done < <(echo "$proc") 2>/dev/null
+while read line
+do
+	pid="$(echo $line | awk '{print $1}')"
+	com="$(echo $line | awk '{print $2}')"
+	mem1="$(echo \\"$list1\\" | awk '/'$pid'/ {print $2}')"
+	mem2="$(echo $line | awk '{print $3}')"
+	let mem="$mem1"-"$mem2"
+	list="$list""
+""$pid"" ""$com"" ""$mem"
+done < <(echo "$list2") 2>/dev/null
+echo "$list" | sort -n -r -k5 | head -n3 | sed 's/ /:/g'

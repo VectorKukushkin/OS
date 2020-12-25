@@ -1,0 +1,10 @@
+#!/bin/bash
+let mem=0
+for dir in /proc/*
+do
+	if [[ "$mem" -lt "$(cat $dir'/status' | awk '/VmRSS/ {print $2}')" ]]
+	then
+		let mem="$(cat $dir'/status' | awk '/VmRSS/ {print $2}')"
+	fi
+done 2>/dev/null
+echo $mem
