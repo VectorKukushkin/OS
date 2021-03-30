@@ -1,0 +1,9 @@
+#!/bin/bash
+lab3/script4_process &
+pid1=$!
+lab3/script4_process &
+pid2=$!
+lab3/script4_process &
+pid3=$!
+renice 10 $pid1
+kill $pid3

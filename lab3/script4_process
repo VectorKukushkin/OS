@@ -1,0 +1,5 @@
+#!/bin/bash
+while true
+do
+	let n=2*2
+done

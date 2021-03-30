@@ -1,0 +1,36 @@
+#!/bin/bash
+operation="+"
+variable=1
+(tail -f pipe) |
+while true
+do
+	read LINE
+	echo "$LINE"
+	case "$LINE" in
+		"+")
+			operation="+"
+			;;
+		"*")
+			operation="*"
+			;;
+		[[:digit:]]*)
+			if [[ "$operation" == "+" ]]
+			then
+				let "variable = variable + LINE"
+			else
+				let "variable = variable * LINE"
+			fi
+			echo "$variable"
+			;;
+		"QUIT")
+			echo "exit"
+			killall tail
+			exit 0
+			;;
+		*)
+			echo "error"
+			killall tail
+			exit 1
+			;;
+	esac
+done

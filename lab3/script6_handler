@@ -1,0 +1,15 @@
+#!/bin/bash
+echo $$ > .pid
+num=1
+trap 'mod=1; let "num = num + 2"' USR1
+trap 'mod=1; let "num = num * 2"' USR2
+trap 'echo "Exiting"; exit 0' SIGTERM
+while true
+do
+	if [[ $mod == 1 ]]
+	then
+		echo $num
+		mod=0
+	fi
+	sleep 1
+done

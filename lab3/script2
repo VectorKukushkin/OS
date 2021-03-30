@@ -1,0 +1,5 @@
+#!/bin/bash
+lab3/script1 2>/dev/null
+sleep 2m
+lab3/script1 2>/dev/null
+tail -f report

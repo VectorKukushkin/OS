@@ -1,0 +1,5 @@
+#!/bin/bash
+crontab -l > cron_tmp
+echo "*/5 * * * 1 lab3/script1" >> cron_tmp
+crontab cron_tmp
+rm cron_tmp

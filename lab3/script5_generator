@@ -1,0 +1,15 @@
+#!/bin/bash
+while true
+do
+	read  LINE
+	echo "$LINE" > pipe
+	if [[ "$LINE" != [[:digit:]]* && "$LINE" != [\+\*] ]]
+	then
+		exit 1
+	else
+		if [[ "$LINE" == "QUIT" ]]
+		then
+			exit 0
+		fi
+	fi
+done
