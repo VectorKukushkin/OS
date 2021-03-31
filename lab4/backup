@@ -1,0 +1,69 @@
+#!/bin/bash
+
+function getBackupName()
+{
+	for (( i=0; i <= 7; i++ ))
+	do
+		backupPath=$(date +'/home/user/Backup-%Y-%m-%d' -d $i' day ago')
+		if [ -d $backupPath ]
+		then
+			path=$backupPath
+			return 1
+		fi
+	done
+	path=$(date +'/home/user/Backup-%Y-%m-%d')
+	return 0
+}
+
+function createBackup()
+{
+	rm $path 2>/dev/null
+	mkdir $path
+	list="$(find /home/user/source/ -type f | sed 's/^\/home\/user\/source\///')"
+	while read line
+	do
+		cp /home/user/source/$line $path/$line &&
+		files="$files$line
+"
+	done <<< "$list" 2>/dev/null
+	echo "Backup is created at $(date +'%d.%m.%Y') in $path
+" >> /home/user/backup-report
+	echo "$files" >> /home/user/backup-report
+}
+
+function updateBackup()
+{
+	list="$(find /home/user/source/ -type f | sed 's/^\/home\/user\/source\///')"
+	while read line
+	do
+		if [ -f $path/$line ]
+		then
+			size1="$(wc -c /home/user/source/$line | awk '{print $1}')"
+			size2="$(wc -c $path/$line | awk '{print $1}')"
+			if [[ $size1 != $size2 ]]
+			then
+				newName=$line"$(date +'.%Y-%m-%d')"
+				cp $path/$line $path/$newName
+				cp /home/user/source/$line $path/$line &&
+				oldFiles="$oldFiles$line $newName
+"
+			fi
+		else
+			cp /home/user/source/$line $path/$line &&
+			newFiles="$newFiles$line
+"
+		fi
+	done <<< "$list" 2>/dev/null
+	echo "Backup is created at $(date +'%d.%m.%Y') in $path
+" >> /home/user/backup-report
+	echo "$newFiles" >> /home/user/backup-report
+	echo "$oldFiles" >> /home/user/backup-report
+}
+
+getBackupName
+if [[ $? == 1 ]]
+then
+	updateBackup
+else
+	createBackup
+fi

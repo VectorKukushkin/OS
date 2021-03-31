@@ -1,0 +1,18 @@
+#!/bin/bash
+if ! [[ -f $1 ]] || [[ $1 == "" ]]
+then
+	echo "This file does not exist!"
+	exit 1
+fi
+if ! [ -d ~/.trash ]
+then
+	rm ~/.trash
+	mkdir ~/.trash
+	echo 0 > ~/.trash/count
+fi
+num=$(head -n 1 ~/.trash/count)
+ln $1 ~/.trash/$num
+rm $1
+echo $num" "$1 >> ~/.trash.log
+let "num = num + 1"
+echo $num > ~/.trash/count

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+basePath=/home/user/restore/
+
+function getBackupName()
+{
+	for (( i=0; i <= 7; i++ ))
+	do
+		path=$(date +'/home/user/Backup-%Y-%m-%d' -d $i' day ago')
+		if [ -d $path ]
+		then
+			return 1
+		fi
+	done
+	return 0
+}
+
+getBackupName
+if [[ $? == 1 ]]
+then
+	mkdir $basePath 2>/dev/null
+	backupName="$(echo $path | sed 's/^\/home\/user\///')"
+	list="$(find $path -type f | sed '/\.[0-9]\{4\}\(-[0-9]\{2\}\)\{2\}$/d')"
+	while read line
+	do
+		fileName="$(echo $line | sed 's/^\/home\/user\/'$backupName'\///')"
+		cp $line $basePath$fileName
+	done <<< "$list"
+else
+	echo "There are no backups!"
+fi
